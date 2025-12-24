@@ -1,17 +1,20 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Simple 8D Audio Player</title>
-  <link rel="stylesheet" href="vortex.css" />
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>8D Audio Player</title>
+    <link rel="stylesheet" href="css/vortex.css">
 </head>
 <body>
-  <div class="player-container">
-    <input type="file" id="audioFile" accept="audio/*" />
-    <audio id="audio" controls></audio>
-  </div>
+    <h1>8D Audio Player</h1>
 
-  <script src="vortex.js"></script>
+    <!-- Audio Player -->
+    <audio controls id="player">
+        <source src="assets/audio/track1.mp3" type="audio/mpeg">
+        Your browser does not support the audio element.
+    </audio>
+
+    <script src="js/vortex.js"></script>
 </body>
 </html>
