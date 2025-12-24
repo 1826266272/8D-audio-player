@@ -1,6 +1,13 @@
 const audio = document.getElementById("audio");
 const fileInput = document.getElementById("audioFile");
 
+//control panel elements
+const playBtn = document.getElementById("playBtn");
+const progressBar = document.querySelector(".progress-bar");
+const progress = document.querySelector(".progress");
+const currentTimeEl = document.getElementById("currentTime");
+const durationEl = document.getElementById("duration");
+
 let audioContext;
 let source;
 let panner;
@@ -75,4 +82,40 @@ function stopOrbit() {
     clearInterval(panInterval);
     panInterval = null;
   }
+}
+
+
+//control panel code
+
+playBtn.addEventListener("click", () => {
+  if (audio.paused) {
+    audio.play();
+    playBtn.textContent = "❚❚";
+  } else {
+    audio.pause();
+    playBtn.textContent = "▶";
+  }
+});
+
+audio.addEventListener("timeupdate", () => {
+  const percent = (audio.currentTime / audio.duration) * 100;
+  progress.style.width = percent + "%";
+
+  currentTimeEl.textContent = formatTime(audio.currentTime);
+});
+
+audio.addEventListener("loadedmetadata", () => {
+  durationEl.textContent = formatTime(audio.duration);
+});
+
+progressBar.addEventListener("click", (e) => {
+  const rect = progressBar.getBoundingClientRect();
+  const percent = (e.clientX - rect.left) / rect.width;
+  audio.currentTime = percent * audio.duration;
+});
+
+function formatTime(seconds) {
+  const m = Math.floor(seconds / 60);
+  const s = Math.floor(seconds % 60);
+  return `${m}:${s.toString().padStart(2, "0")}`;
 }

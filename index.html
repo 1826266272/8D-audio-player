@@ -3,15 +3,48 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Simple 8D Audio Player</title>
-  <link rel="stylesheet" href="css/style.css" />
+  <title>Spatial Audio Player</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="css/style.css">
 </head>
 <body>
-  <div class="player-container">
-    <input type="file" id="audioFile" accept="audio/*" />
-    <audio id="audio" controls></audio>
-  </div>
 
-  <script src="js/script.js"></script>
+  <main class="app">
+    <section class="player-card">
+
+      <header class="header">
+        <h1>Flow</h1>
+        <p>Experience 8-Dimentional audio</p>
+      </header>
+
+      <label class="upload-btn">
+        Upload Audio
+        <input type="file" id="audioFile" accept="audio/*" hidden />
+      </label>
+
+      <audio id="audio"></audio>
+
+        <div class="controls">
+        <button id="playBtn" class="play-btn">▶</button>
+
+        <div class="progress-container">
+            <span id="currentTime"></span>
+            <div class="progress-bar">
+            <div class="progress"></div>
+            </div>
+            <span id="duration"></span>
+        </div>
+        </div>
+
+      <footer class="footer">
+        <img class="headphone-icon" src="assets/icons/airpods_purple.png" alt=""> 
+        <span>Headphones recommended</span>
+      </footer>
+
+    </section>
+  </main>
+<script src="js/script.js"></script>
 </body>
 </html>
