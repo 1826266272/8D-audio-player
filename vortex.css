@@ -1,0 +1,23 @@
+body {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+  background: #0a0a12;
+  color: #fff;
+  font-family: sans-serif;
+}
+
+.player-container {
+  text-align: center;
+}
+
+input[type="file"] {
+  margin-bottom: 20px;
+}
+
+audio {
+  width: 300px;
+  border-radius: 10px;
+  outline: none;
+}
