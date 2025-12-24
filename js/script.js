@@ -1,7 +1,4 @@
-const audio = document.getElementById("audio");
 const fileInput = document.getElementById("audioFile");
-
-//control panel elements
 const playBtn = document.getElementById("playBtn");
 const progressBar = document.querySelector(".progress-bar");
 const progress = document.querySelector(".progress");
@@ -9,26 +6,40 @@ const currentTimeEl = document.getElementById("currentTime");
 const durationEl = document.getElementById("duration");
 
 let audioContext;
+let audio;
 let source;
 let panner;
 let bassFilter;
 let trebleFilter;
 let panInterval;
 
+// --------------------
+// Upload & Load Audio
+// --------------------
 fileInput.addEventListener("change", () => {
   const file = fileInput.files[0];
   if (!file) return;
 
-  audio.src = URL.createObjectURL(file);
-  audio.load();
+  // Stop previous audio if exists
+  if (audio) {
+    audio.pause();
+    stopOrbit();
+  }
 
+  // Reset controls
+  playBtn.textContent = "▶";
+  progress.style.width = "0%";
+  currentTimeEl.textContent = "0:00";
+  durationEl.textContent = "0:00";
+
+  // Create new audio element
+  audio = new Audio(URL.createObjectURL(file));
+  audio.preload = "auto";
+
+  // Initialize AudioContext if first time
   if (!audioContext) {
     audioContext = new (window.AudioContext || window.webkitAudioContext)();
 
-    // Source node
-    source = audioContext.createMediaElementSource(audio);
-
-    // HRTF 3D panner
     panner = audioContext.createPanner();
     panner.panningModel = "HRTF";
     panner.distanceModel = "inverse";
@@ -36,7 +47,6 @@ fileInput.addEventListener("change", () => {
     panner.maxDistance = 10000;
     panner.rolloffFactor = 1;
 
-    // Bass and Treble filters
     bassFilter = audioContext.createBiquadFilter();
     bassFilter.type = "lowshelf";
     bassFilter.frequency.value = 150;
@@ -46,23 +56,72 @@ fileInput.addEventListener("change", () => {
     trebleFilter.type = "highshelf";
     trebleFilter.frequency.value = 4000;
     trebleFilter.gain.value = 3;
+  }
 
-    // Connect nodes: Source → Bass → Treble → Panner → Destination
-    source.connect(bassFilter);
-    bassFilter.connect(trebleFilter);
-    trebleFilter.connect(panner);
-    panner.connect(audioContext.destination);
+  // Disconnect old source if exists
+  if (source) source.disconnect();
+
+  // Connect new source
+  source = audioContext.createMediaElementSource(audio);
+  source.connect(bassFilter);
+  bassFilter.connect(trebleFilter);
+  trebleFilter.connect(panner);
+  panner.connect(audioContext.destination);
+
+  // Update metadata when loaded
+  audio.addEventListener("loadedmetadata", () => {
+    durationEl.textContent = formatTime(audio.duration);
+  });
+
+  // Update progress
+  audio.addEventListener("timeupdate", () => {
+    if (audio.duration) {
+      const percent = (audio.currentTime / audio.duration) * 100;
+      progress.style.width = percent + "%";
+      currentTimeEl.textContent = formatTime(audio.currentTime);
+    }
+  });
+
+  // When audio ends
+  audio.addEventListener("ended", () => {
+    playBtn.textContent = "▶";
+    progress.style.width = "0%";
+    stopOrbit();
+  });
+});
+
+// --------------------
+// Play / Pause
+// --------------------
+playBtn.addEventListener("click", async () => {
+  if (!audio) return;
+
+  await audioContext.resume();
+
+  if (audio.paused) {
+    audio.play();
+    playBtn.textContent = "❚❚";
+    startOrbit();
+  } else {
+    audio.pause();
+    playBtn.textContent = "▶";
+    stopOrbit();
   }
 });
 
-audio.addEventListener("play", () => {
-  audioContext.resume();
-  startOrbit();
+// --------------------
+// Seek / Progress Bar
+// --------------------
+progressBar.addEventListener("click", (e) => {
+  if (!audio || !audio.duration) return;
+  const rect = progressBar.getBoundingClientRect();
+  const percent = (e.clientX - rect.left) / rect.width;
+  audio.currentTime = percent * audio.duration;
 });
 
-audio.addEventListener("pause", stopOrbit);
-audio.addEventListener("ended", stopOrbit);
-
+// --------------------
+// 3D Panner Orbit
+// --------------------
 function startOrbit() {
   stopOrbit();
   const radius = 1.2;
@@ -84,36 +143,9 @@ function stopOrbit() {
   }
 }
 
-
-//control panel code
-
-playBtn.addEventListener("click", () => {
-  if (audio.paused) {
-    audio.play();
-    playBtn.textContent = "❚❚";
-  } else {
-    audio.pause();
-    playBtn.textContent = "▶";
-  }
-});
-
-audio.addEventListener("timeupdate", () => {
-  const percent = (audio.currentTime / audio.duration) * 100;
-  progress.style.width = percent + "%";
-
-  currentTimeEl.textContent = formatTime(audio.currentTime);
-});
-
-audio.addEventListener("loadedmetadata", () => {
-  durationEl.textContent = formatTime(audio.duration);
-});
-
-progressBar.addEventListener("click", (e) => {
-  const rect = progressBar.getBoundingClientRect();
-  const percent = (e.clientX - rect.left) / rect.width;
-  audio.currentTime = percent * audio.duration;
-});
-
+// --------------------
+// Format Time
+// --------------------
 function formatTime(seconds) {
   const m = Math.floor(seconds / 60);
   const s = Math.floor(seconds % 60);
