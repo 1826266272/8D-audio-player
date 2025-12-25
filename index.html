@@ -18,7 +18,14 @@
       <div class="upload-section">
         <label class="upload-btn">
           Upload Audio
-          <input type="file" id="audioFile" accept="audio/*" multiple hidden />
+          <input
+            type="file"
+            id="audioFile"
+            accept="audio/*"
+            multiple
+            hidden
+            aria-label="Upload audio files"
+          />
         </label>
       </div>
 
@@ -32,26 +39,43 @@
         <p>Experience 8-Dimensional audio</p>
       </header>
 
-      <audio id="audio"></audio>
+      <audio id="audio" preload="metadata"></audio>
 
       <div class="controls">
-        <button id="playBtn" class="play-btn">▶</button>
+        <button
+          id="playBtn"
+          class="play-btn"
+          aria-label="Play or pause"
+        >▶</button>
+
         <div class="progress-container">
           <span id="currentTime">0:00</span>
-          <div class="progress-bar"><div class="progress"></div></div>
+          <div class="progress-bar">
+            <div class="progress"></div>
+          </div>
           <span id="duration">0:00</span>
         </div>
       </div>
-
       <footer class="footer">
-        <img class="headphone-icon" src="assets/icons/airpods_purple.png" alt="">
+        <img
+          class="headphone-icon"
+          src="assets/icons/airpods_purple.png"
+          alt="Headphones icon"
+        >
         <span>Headphones recommended</span>
       </footer>
     </section>
 
+    <section class="youtube-info">
+      <div class="youtube-box">
+        <div class="thumbnail-container">
+          <img id="ytThumbnail" src="" alt="Thumbnail" />
+          <div class="ytTitleOverlay" id="ytTitle"></div>
+        </div>
+      </div>
+    </section>
   </div>
 </main>
-
 <script src="js/script.js"></script>
 </body>
 </html>

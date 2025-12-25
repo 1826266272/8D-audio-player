@@ -141,3 +141,63 @@ function format(s) {
   const sec = Math.floor(s % 60).toString().padStart(2, "0");
   return `${m}:${sec}`;
 }
+
+
+// YouTube Thumbnail - PosterFeature
+/* ---------------- YOUTUBE THUMBNAIL ---------------- */
+
+const ytAPIKey = "AIzaSyAhDQwqhvPMIwDISYnEdVsH9E_H5X5eUTs"; 
+const ytThumbnail = document.getElementById("ytThumbnail");
+const ytTitle = document.getElementById("ytTitle"); 
+const ytStats = document.getElementById("ytStats");
+
+async function fetchYouTubeInfo(songName) {
+  const ytThumbnail = document.getElementById("ytThumbnail");
+  const ytTitle = document.getElementById("ytTitle");
+  
+  try {
+    const searchRes = await fetch(
+      `https://www.googleapis.com/youtube/v3/search?part=snippet&q=${encodeURIComponent(songName)}&type=video&maxResults=1&key=${ytAPIKey}`
+    );
+    const searchData = await searchRes.json();
+    if (!searchData.items || searchData.items.length === 0) {
+      ytThumbnail.src = "";
+      ytTitle.textContent = "No video found";
+      return;
+    }
+
+    const video = searchData.items[0];
+    const snippet = video.snippet;
+
+    ytThumbnail.src = snippet.thumbnails.medium.url;
+    ytTitle.textContent = snippet.title;
+
+  } catch (err) {
+    console.error("YouTube API error:", err);
+    ytThumbnail.src = "";
+    ytTitle.textContent = "Error fetching video";
+  }
+}
+async function playTrack(index) {
+  initAudioContext();
+  await audioContext.resume();
+
+  currentIndex = index;
+  audio.pause();
+  audio.src = tracks[index].url;
+  audio.currentTime = 0;
+
+  await audio.play();
+
+  playBtn.textContent = "❚❚";
+  renderPlaylist();
+  startOrbit();
+
+  // fetch YouTube thumbnail but don't await it
+  fetchYouTubeInfo(cleanSongName(tracks[index].name));
+}
+
+function cleanSongName(fileName) {
+  // removes stuff like [nZiJTYiujUs] from file name
+  return fileName.replace(/\[.*?\]/g, "").replace(/\..+$/, "").trim();
+}
