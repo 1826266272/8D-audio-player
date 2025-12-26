@@ -229,17 +229,21 @@ audio {
 /* ---------------- MOBILE ---------------- */
 @media (max-width: 768px) {
   .player-container {
-    flex-direction: column-reverse;
+    flex-direction: column;
     align-items: center;
+    width: 100%;  /* ensure it doesn’t overflow */
+    padding: 10px;
   }
 
   .playlist-card,
   .player-card {
-    width: 130%;
+    width: 100%;      /* fill mobile screen */
+    max-width: 100%;  /* prevent horizontal scroll */
+    height: auto;     /* let content define height */
   }
 
   .playlist-card {
-    max-height: 220px;
+    max-height: 220px; /* optional scroll */
   }
 
   .progress-bar {
