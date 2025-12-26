@@ -15,95 +15,165 @@ body {
   margin: 0;
   min-height: 100vh;
   background: var(--bg);
-  font-family: "Inter", system-ui, -apple-system, BlinkMacSystemFont;
+  font-family: "Inter", system-ui, -apple-system, BlinkMacSystemFont, sans-serif;
   color: var(--text);
+  display: flex;
+  justify-content: center;
+  padding: 20px;
+}
+
+/* Layout */
+.player-container {
+  display: flex;
+  gap: 20px;
+  align-items: flex-start;
+  position: relative;
+  z-index: 10;
+}
+
+/* ---------------- PLAYLIST CARD ---------------- */
+.playlist-card {
+  background: rgba(255, 255, 255, 0.05);  /* very light, almost invisible */
+  backdrop-filter: blur(15px);            /* frosted glass */
+  -webkit-backdrop-filter: blur(15px);
+  border-radius: 18px;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  padding: 16px;
+  max-height: 500px;
+  overflow-y: auto;
+  width: 250px;
+}
+
+.playlist-card h2 {
+  margin: 0 0 10px;
+  text-align: center;
+  font-size: 16px;
+  color: var(--accent);
+}
+
+/* Upload Section */
+.upload-section {
+  position: sticky;
+  top: 0; /* fully glass */
+  background: transparent;
+  padding-bottom: 8px;
+  z-index: 2;
+}
+
+
+/* ---------------- UPLOAD BUTTON ---------------- */
+.upload-btn {
+  width: 100%;
+  height: 44px;
+  border-radius: 12px;
+  border: 1px solid rgba(255,255,255,0.2);
+  background: transparent;       /* fully transparent */
+  color: var(--text);
+  cursor: pointer;
   display: flex;
   align-items: center;
   justify-content: center;
+  font-weight: 500;
+  transition: border-color 0.2s ease, color 0.2s ease, transform 0.1s ease;
 }
-/* Header */ 
-.header h1{
-  margin: 0;
-  font-size: 18px;
+
+.upload-btn:hover {
+  border-color: var(--accent);
+}
+
+.upload-btn:active {
+  transform: scale(0.97);
+}
+
+/* Playlist tracks */
+.track {
+  padding: 6px 10px;
+  border-radius: 12px;
+  cursor: pointer;
+  font-size: 13px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  transition: background 0.2s ease, color 0.2s ease;
+}
+
+.track:hover {
+  background: var(--accent);
+  color: #000;
+}
+
+.track.playing {
+  background: var(--accent);
+  color: #000;
   font-weight: 600;
 }
 
-.header:hover {
+/* Scrollbar */
+.playlist-card::-webkit-scrollbar {
+  width: 6px;
+}
+
+.playlist-card::-webkit-scrollbar-thumb {
+  background: var(--accent);
+  border-radius: 3px;
+}
+
+.playlist-card::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+/* ---------------- PLAYER CARD ---------------- */
+.player-card {
+  background: rgba(22, 26, 34, 0.3); /* more transparent */
+  backdrop-filter: blur(15px);       /* glass effect */
+  border-radius: 18px;
+  padding: 32px;                     /* bigger padding */
+  border: 1px solid rgba(35, 40, 51, 0.6);
+  z-index: 10;
+  position: relative;
+  width: 400px;                       /* bigger player */
+  max-width: 50vw;
+}
+
+.header h1 {
+  margin: 0;
+  font-size: 28px;
   color: var(--accent);
 }
 
 .header p {
   margin: 4px 0 0;
-  font-size: 13px;
+  font-size: 14px;
   color: var(--muted);
 }
 
-.app {
-  width: 100%;
-  padding: 20px;
-}
-
-.player-card {
-  max-width: 420px;
-  margin: auto;
-  background: var(--card);
-  border-radius: 18px;
-  padding: 24px;
-  border: 1px solid var(--border);
-  display: flex;
-  flex-direction: column;
-  gap: 18px;
-}
-
-/* Upload Button */
-.upload-btn {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  height: 44px;
-  border-radius: 12px;
-  background: transparent;
-  border: 1px solid var(--border);
-  color: var(--text);
-  font-size: 14px;
-  cursor: pointer;
-  transition: all 0.2s ease;
-}
-
-.upload-btn:hover {
-  border-color: var(--accent);
-  color: var(--accent);
-}
-
-/* Audio Player */
 audio {
   width: 100%;
   height: 42px;
   border-radius: 12px;
-  background: #000;
 }
 
-/* Control Panel */
+/* Controls */
 .controls {
   display: flex;
+  gap: 18px;
   align-items: center;
-  gap: 14px;
 }
 
 .play-btn {
-  width: 44px;
-  height: 44px;
+  width: 50px;
+  height: 50px;
   border-radius: 50%;
-  border: none;
-  background-color: var(--card);
-  color: white;
-  font-size: 18px;
+  border-style: none;
+  background: transparent;
+  color: var(--accent);
+  font-size: 22px;
   cursor: pointer;
-  transition: transform 0.15s ease;
+  transition: transform 0.15s ease, color 0.2s ease, border-color 0.2s ease;
 }
 
 .play-btn:active {
-  transform: scale(0.95);
+  transform: scale(0.92);
 }
 
 .progress-container {
@@ -117,7 +187,7 @@ audio {
 
 .progress-bar {
   flex: 1;
-  height: 4px;
+  height: 6px;                     /* thicker bar */
   background: #2a2f3a;
   border-radius: 4px;
   cursor: pointer;
@@ -131,30 +201,48 @@ audio {
   border-radius: 4px;
 }
 
-.headphone-icon {
-  height: 30px;
-  width: auto;
-  display: block;
-  fill: var(--muted);
-}
-
 /* Footer */
 .footer {
   display: flex;
-  align-items: center;        /* vertical alignment fix */
   justify-content: center;
+  align-items: center;
   gap: 8px;
   font-size: 12px;
   color: var(--muted);
 }
 
+.headphone-icon {
+  height: 28px;
+}
 
-/* Mobile polish */
-@media (max-width: 480px) {
+/* ---------------- BACKGROUND VIDEO ---------------- */
+#bgVideo {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  z-index: -1;
+}
+
+/* ---------------- MOBILE ---------------- */
+@media (max-width: 768px) {
+  .player-container {
+    flex-direction: column-reverse;
+    align-items: center;
+  }
+
+  .playlist-card,
   .player-card {
-    padding: 20px;
-    padding-top: 40px;
-    padding-bottom: 40px;
-    border-radius: 16px;
+    width: 130%;
+  }
+
+  .playlist-card {
+    max-height: 220px;
+  }
+
+  .progress-bar {
+    width: 100%;
   }
 }

@@ -3,48 +3,81 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Spatial Audio Player</title>
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+  <title>Flow 8D Audio Player</title>
   <link rel="stylesheet" href="css/style.css">
+  <link rel="manifest" href="manifest.json">
+  <meta name="theme-color" content="#4f46e5">
 </head>
 <body>
-
+  <video autoplay muted loop preload="auto" id="bgVideo">
+      <source src="assets/background/nebula.3840x2160.mp4" type="video/mp4">
+      Your browser does not support HTML5 video.
+    </video>
   <main class="app">
-    <section class="player-card">
+  <button id="installBtn" 
+    style="
+    display: none;
+    ">
+    Download App</button>
 
+  <div class="player-container">
+
+    <!-- Playlist -->
+    <section class="playlist-card">
+      <h2>Playlist</h2>
+
+      <div class="upload-section">
+        <label class="upload-btn">
+          Upload Audio
+          <input
+            type="file"
+            id="audioFile"
+            accept="audio/*"
+            multiple
+            hidden
+            aria-label="Upload audio files"
+          />
+        </label>
+      </div>
+
+      <div class="playlist"></div>
+    </section>
+
+    <!-- Player -->
+    <section class="player-card">
       <header class="header">
         <h1>Flow</h1>
-        <p>Experience 8-Dimentional audio</p>
+        <p>Experience 8-Dimensional audio</p>
       </header>
 
-      <label class="upload-btn">
-        Upload Audio
-        <input type="file" id="audioFile" accept="audio/*" hidden />
-      </label>
+      <audio id="audio" preload="metadata"></audio>
 
-      <audio id="audio"></audio>
-
-        <div class="controls">
-        <button id="playBtn" class="play-btn">▶</button>
+      <div class="controls">
+        <button
+          id="playBtn"
+          class="play-btn"
+          aria-label="Play or pause"
+        >▶</button>
 
         <div class="progress-container">
-            <span id="currentTime"></span>
-            <div class="progress-bar">
+          <span id="currentTime">0:00</span>
+          <div class="progress-bar">
             <div class="progress"></div>
-            </div>
-            <span id="duration"></span>
+          </div>
+          <span id="duration">0:00</span>
         </div>
-        </div>
-
+      </div>
       <footer class="footer">
-        <img class="headphone-icon" src="assets/icons/airpods_purple.png" alt=""> 
+        <img
+          class="headphone-icon"
+          src="assets/icons/airpods_purple.png"
+          alt="Headphones icon"
+        >
         <span>Headphones recommended</span>
       </footer>
-
     </section>
-  </main>
+  </div>
+</main>
 <script src="js/script.js"></script>
 </body>
 </html>
