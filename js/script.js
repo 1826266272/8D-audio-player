@@ -142,4 +142,53 @@ function format(s) {
   return `${m}:${sec}`;
 }
 
+/* Service Worker */
 
+/* ================================
+   PWA: Service Worker
+================================ */
+
+if ("serviceWorker" in navigator) {
+  window.addEventListener("load", () => {
+    navigator.serviceWorker
+      .register("/sw.js")   // ✅ ROOT PATH (IMPORTANT)
+      .then(() => console.log("Service Worker registered"))
+      .catch(err => console.error("SW failed:", err));
+  });
+}
+
+/* ===============================
+   PWA SETUP (FINAL, FIXED)
+================================ */
+
+if ("serviceWorker" in navigator) {
+  window.addEventListener("load", () => {
+    navigator.serviceWorker
+      .register("/sw.js") // ROOT path
+      .then(() => console.log("✅ SW registered"))
+      .catch(err => console.error("❌ SW error", err));
+  });
+}
+
+const installBtn = document.getElementById("installBtn");
+let deferredPrompt = null;
+
+window.addEventListener("beforeinstallprompt", e => {
+  console.log("✅ Install prompt ready");
+  e.preventDefault();
+  deferredPrompt = e;
+  if (installBtn) installBtn.hidden = false;
+});
+
+if (installBtn) {
+  installBtn.addEventListener("click", async () => {
+    if (!deferredPrompt) {
+      alert("Install not ready yet. Reload once.");
+      return;
+    }
+    deferredPrompt.prompt();
+    await deferredPrompt.userChoice;
+    deferredPrompt = null;
+    installBtn.hidden = true;
+  });
+}
