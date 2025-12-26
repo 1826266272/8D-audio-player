@@ -34,8 +34,7 @@ body {
 /* ---------------- PLAYLIST CARD ---------------- */
 .playlist-card {
   background: rgba(255, 255, 255, 0.01);  /* very light, almost invisible */
-  backdrop-filter: blur(3px);            /* frosted glass */
-  -webkit-backdrop-filter: blur(3px);
+  
   border-radius: 18px;
   border: 1px solid rgba(255, 255, 255, 0.1);
   padding: 16px;
@@ -124,8 +123,8 @@ body {
 
 /* ---------------- PLAYER CARD ---------------- */
 .player-card {
-  background: rgba(22, 26, 34, 0.1); /* more transparent */
-  backdrop-filter: blur(3px);       /* glass effect */
+  background: rgba(22, 26, 34, 0.2); /* more transparent */
+        /* glass effect */
   border-radius: 18px;
   padding: 32px;                     /* bigger padding */
   border: 1px solid rgba(35, 40, 51, 0.6);
