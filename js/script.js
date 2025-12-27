@@ -8,7 +8,7 @@ const durationEl = document.getElementById("duration");
 const playlistEl = document.querySelector(".playlist");
 
 let audioContext;
-let source, panner, bassFilter, trebleFilter;
+let source, panner, bassFilter, trebleFilter, presence;
 let panInterval;
 
 let tracks = [];
@@ -21,22 +21,61 @@ function initAudioContext() {
   audioContext = new (window.AudioContext || window.webkitAudioContext)();
   source = audioContext.createMediaElementSource(audio);
 
+  /* === Spatial Panner === */
   panner = audioContext.createPanner();
   panner.panningModel = "HRTF";
+  panner.distanceModel = "inverse";
+  panner.refDistance = 1;
+  panner.maxDistance = 1000;
+  panner.rolloffFactor = 1.5;
 
+  /* === EQ for clarity === */
+
+  // Low cut (remove rumble)
+  const lowCut = audioContext.createBiquadFilter();
+  lowCut.type = "highpass";
+  lowCut.frequency.value = 60;
+
+  // Bass control (tight, not muddy)
   bassFilter = audioContext.createBiquadFilter();
   bassFilter.type = "lowshelf";
-  bassFilter.frequency.value = 150;
-  bassFilter.gain.value = -5;
+  bassFilter.frequency.value = 120;
+  bassFilter.gain.value = -2;
 
+  // Presence boost (vocals / detail)
+  presence = audioContext.createBiquadFilter();
+  presence.type = "peaking";
+  presence.frequency.value = 2500;
+  presence.Q.value = 1.2;
+  presence.gain.value = 3;
+
+  // Treble air (clarity)
   trebleFilter = audioContext.createBiquadFilter();
   trebleFilter.type = "highshelf";
-  trebleFilter.frequency.value = 4000;
-  trebleFilter.gain.value = 3;
+  trebleFilter.frequency.value = 6000;
+  trebleFilter.gain.value = 2;
 
-  source.connect(bassFilter)
+  /* === Compressor (clarity + loudness control) === */
+  const compressor = audioContext.createDynamicsCompressor();
+  compressor.threshold.value = -18;
+  compressor.knee.value = 24;
+  compressor.ratio.value = 3;
+  compressor.attack.value = 0.005;
+  compressor.release.value = 0.25;
+
+  /* === Output gain (safe level) === */
+  const outputGain = audioContext.createGain();
+  outputGain.gain.value = 0.95;
+
+  /* === Connect chain === */
+  source
+    .connect(lowCut)
+    .connect(bassFilter)
+    .connect(presence)
     .connect(trebleFilter)
+    .connect(compressor)
     .connect(panner)
+    .connect(outputGain)
     .connect(audioContext.destination);
 }
 
@@ -67,8 +106,10 @@ function renderPlaylist() {
 }
 
 /* Play Track */
+
 async function playTrack(index) {
   initAudioContext();
+  applyPreset("balanced");
   await audioContext.resume();
 
   currentIndex = index;
@@ -128,7 +169,11 @@ function startOrbit() {
   const start = audioContext.currentTime;
   panInterval = setInterval(() => {
     const t = audioContext.currentTime - start;
-    panner.setPosition(Math.cos(t), 0, Math.sin(t));
+    panner.setPosition(
+      Math.cos(t)*1.4,
+      0,
+      Math.sin(t)*0.6
+      );
   }, 30);
 }
 function stopOrbit() {
@@ -164,9 +209,9 @@ if ("serviceWorker" in navigator) {
 if ("serviceWorker" in navigator) {
   window.addEventListener("load", () => {
     navigator.serviceWorker
-      .register("/sw.js") // ROOT path
-      .then(() => console.log("✅ SW registered"))
-      .catch(err => console.error("❌ SW error", err));
+      .register("sw.js") // ROOT path
+      .then(() => console.log("SW registered"))
+      .catch(err => console.error("SW error!", err));
   });
 }
 
@@ -192,3 +237,41 @@ if (installBtn) {
     installBtn.hidden = true;
   });
 }
+
+
+/* preset buttons */
+function applyPreset(type) {
+  if (!audioContext) return;
+
+  switch (type) {
+    case "balanced":
+      bassFilter.gain.value = -2;
+      presence.gain.value = 3;
+      trebleFilter.gain.value = 2;
+      break;
+
+    case "vocal":
+      bassFilter.gain.value = -4;
+      presence.gain.value = 4;
+      trebleFilter.gain.value = 3;
+      break;
+
+    case "bass":
+      bassFilter.gain.value = 3;
+      presence.gain.value = 1.5;
+      trebleFilter.gain.value = 1;
+      break;
+  }
+
+  document.querySelectorAll(".presets button").forEach(btn => {
+    btn.classList.toggle("active", btn.dataset.preset === type);
+  });
+}
+
+document.querySelectorAll(".presets button").forEach(btn => {
+  btn.addEventListener("click", async () => {
+    initAudioContext();
+    await audioContext.resume();
+    applyPreset(btn.dataset.preset);
+  });
+});

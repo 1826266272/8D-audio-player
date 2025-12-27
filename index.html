@@ -12,7 +12,7 @@
 <link rel="icon" type="image/png" sizes="192x192" href="assets/icons/icon-192.png">
 </head>
 <body>
-  <video autoplay muted loop preload="auto" id="bgVideo">
+    <video autoplay muted loop preload="auto" id="bgVideo">
       <source src="assets/background/nebula.3840x2160.mp4" type="video/mp4">
       Your browser does not support HTML5 video.
     </video>
@@ -27,7 +27,7 @@
 
     <!-- Playlist -->
     <section class="playlist-card">
-      <h2>Playlist</h2>
+      <h1>Playlist</h1>
 
       <div class="upload-section">
         <label class="upload-btn">
@@ -70,6 +70,12 @@
           <span id="duration">0:00</span>
         </div>
       </div>
+      <div class="presets">
+        <button data-preset="vocal">Vocal</button>
+        <button data-preset="balanced" class="active">Balanced</button>
+        <button data-preset="bass">Bass</button>
+      </div>
+
       <footer class="footer">
         <img
           class="headphone-icon"
