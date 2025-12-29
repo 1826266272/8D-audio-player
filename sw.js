@@ -1,4 +1,4 @@
-const CACHE_NAME = "8d-player-cache-v1";
+const CACHE_NAME = "8d-player-cache-v2";
 const urlsToCache = [
   "/",
   "/index.html",
