@@ -23,6 +23,7 @@ body {
   padding: 20px;
 }
 
+
 /* Layout */
 .player-container {
   display: flex;
@@ -191,7 +192,7 @@ audio {
 
 .progress-bar {
   flex: 1;
-  height: 6px;                     /* thicker bar */
+  height: 8px;                     /* thicker bar */
   background: #2a2f3a;
   border-radius: 4px;
   cursor: pointer;
@@ -220,7 +221,7 @@ audio {
   height: 28px;
 }
 
-/* ---------------- BACKGROUND VIDEO ---------------- */
+/* ---------------- BACKGROUND VIDEO ---------------- 
 #bgVideo {
   position: fixed;
   top: 0;
@@ -229,7 +230,7 @@ audio {
   height: 100%;
   object-fit: cover;
   z-index: -1;
-}
+}*/ 
 
 /* ---------------- PRESETS ---------------- */
 .presets {

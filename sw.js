@@ -4,7 +4,6 @@ const urlsToCache = [
   "/index.html",
   "/css/style.css",
   "/js/script.js",
-  "/assets/background/nebula.3840x2160.mp4",
   "/assets/icons/icon-192.png",
   "/assets/icons/icon-512.png"
 ];
