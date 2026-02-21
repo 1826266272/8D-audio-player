@@ -6,7 +6,9 @@ const progress = document.querySelector(".progress");
 const currentTimeEl = document.getElementById("currentTime");
 const durationEl = document.getElementById("duration");
 const playlistEl = document.querySelector(".playlist");
+const toggleBtn = document.getElementById("toggle8d");
 
+let is8dEnabled = true;
 let audioContext;
 let source, panner, bassFilter, trebleFilter;
 let panInterval;
@@ -34,10 +36,11 @@ function initAudioContext() {
   trebleFilter.frequency.value = 4000;
   trebleFilter.gain.value = 3;
 
+  // IMPORTANT: connect conditionally
   source.connect(bassFilter)
-    .connect(trebleFilter)
-    .connect(panner)
-    .connect(audioContext.destination);
+        .connect(trebleFilter)
+        .connect(panner)
+        .connect(audioContext.destination);
 }
 
 /* Upload */
@@ -85,6 +88,26 @@ async function playTrack(index) {
   startOrbit();
 }
 
+/* ===============================
+   8D TOGGLE
+================================ */
+
+toggleBtn.addEventListener("click", () => {
+  is8dEnabled = !is8dEnabled;
+
+  if (is8dEnabled) {
+    toggleBtn.textContent = "8D Effect: ON";
+    toggleBtn.classList.add("active");
+
+    if (!audio.paused) startOrbit();
+  } else {
+    toggleBtn.textContent = "8D Effect: OFF";
+    toggleBtn.classList.remove("active");
+
+    stopOrbit();
+  }
+});
+
 /* Play / Pause */
 playBtn.onclick = async () => {
   initAudioContext();
@@ -124,15 +147,24 @@ audio.addEventListener("ended", () => {
 
 /* 8D Orbit */
 function startOrbit() {
+  if (!is8dEnabled) return;
+
   stopOrbit();
   const start = audioContext.currentTime;
+
   panInterval = setInterval(() => {
     const t = audioContext.currentTime - start;
     panner.setPosition(Math.cos(t), 0, Math.sin(t));
   }, 30);
 }
+
 function stopOrbit() {
   clearInterval(panInterval);
+
+  // Reset to center position
+  if (panner) {
+    panner.setPosition(0, 0, 0);
+  }
 }
 
 /* Utils */
