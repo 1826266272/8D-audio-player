@@ -48,37 +48,45 @@
 
     <!-- Player -->
     <section class="player-card">
-      <header class="header">
-        <h1>Flow</h1>
-        <p>Experience 8-Dimensional audio</p>
-      </header>
+  <header class="header">
+    <h1>Flow</h1>
+    <p>Experience 8-Dimensional audio</p>
+  </header>
 
-      <audio id="audio" preload="metadata"></audio>
+  <audio id="audio" preload="metadata"></audio>
 
-      <div class="controls">
-        <button
-          id="playBtn"
-          class="play-btn"
-          aria-label="Play or pause"
-        >▶</button>
+  <div class="controls">
+    <button
+      id="playBtn"
+      class="play-btn"
+      aria-label="Play or pause"
+    >▶</button>
 
-        <div class="progress-container">
-          <span id="currentTime">0:00</span>
-          <div class="progress-bar">
-            <div class="progress"></div>
-          </div>
-          <span id="duration">0:00</span>
-        </div>
+    <div class="progress-container">
+      <span id="currentTime">0:00</span>
+      <div class="progress-bar">
+        <div class="progress"></div>
       </div>
-      <footer class="footer">
-        <img
-          class="headphone-icon"
-          src="assets/icons/airpods_purple.png"
-          alt="Headphones icon"
-        >
-        <span>Headphones recommended</span>
-      </footer>
-    </section>
+      <span id="duration">0:00</span>
+    </div>
+  </div>
+
+  <!-- 8D TOGGLE BUTTON -->
+  <div class="toggle-container">
+    <button id="toggle8d" class="toggle-btn active">
+      8D Effect: ON
+    </button>
+  </div>
+
+  <footer class="footer">
+    <img
+      class="headphone-icon"
+      src="assets/icons/airpods_purple.png"
+      alt="Headphones icon"
+    >
+    <span>Headphones recommended</span>
+  </footer>
+</section>
   </div>
 </main>
 <script src="js/script.js"></script>
