@@ -249,3 +249,34 @@ audio {
     width: 100%;
   }
 }
+/* ================================
+   8D TOGGLE BUTTON
+================================ */
+
+.toggle-container {
+  margin-top: 18px;
+  display: flex;
+  justify-content: center;
+}
+
+.toggle-btn {
+  padding: 10px 18px;
+  border-radius: 999px;
+  border: 1px solid var(--accent);
+  background: transparent;
+  color: var(--accent);
+  cursor: pointer;
+  font-size: 13px;
+  font-weight: 500;
+  transition: all 0.2s ease;
+}
+
+.toggle-btn:hover {
+  background: var(--accent);
+  color: #000;
+}
+
+.toggle-btn.active {
+  background: var(--accent);
+  color: #000;
+}
