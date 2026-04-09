@@ -34,7 +34,7 @@ body {
 /* ---------------- PLAYLIST CARD ---------------- */
 .playlist-card {
   background: rgba(255, 255, 255, 0.01);  /* very light, almost invisible */
-  
+  background-filter: blur(10px);
   border-radius: 18px;
   border: 1px solid rgba(255, 255, 255, 0.1);
   padding: 16px;
@@ -124,7 +124,7 @@ body {
 /* ---------------- PLAYER CARD ---------------- */
 .player-card {
   background: rgba(22, 26, 34, 0.2); /* more transparent */
-        /* glass effect */
+  background-filter: blur(10px);/* glass effect */
   border-radius: 18px;
   padding: 32px;                     /* bigger padding */
   border: 1px solid rgba(35, 40, 51, 0.6);
@@ -228,7 +228,7 @@ audio {
 /* ---------------- MOBILE ---------------- */
 @media (max-width: 768px) {
   .player-container {
-    flex-direction: column;
+    flex-direction: column-reverse;
     align-items: center;
     width: 100%;  /* ensure it doesn’t overflow */
     padding: 10px;
@@ -242,7 +242,14 @@ audio {
   }
 
   .playlist-card {
-    max-height: 220px; /* optional scroll */
+    max-height: 220px;
+    position: sticky;
+    z-index: 100; /* optional scroll */
+  }
+
+  .playlist {
+    position: relative;
+    z-index: 50;
   }
 
   .progress-bar {
@@ -255,6 +262,7 @@ audio {
 
 .toggle-container {
   margin-top: 18px;
+  margin-bottom: 20px;
   display: flex;
   justify-content: center;
 }
